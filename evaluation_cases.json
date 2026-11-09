@@ -1,0 +1,22 @@
+[
+  {"question":"RAG 全称是什么？","reference":"检索增强生成","source":"01_rag_jianjie.txt"},
+  {"question":"生成回答之前 RAG 会做什么？","reference":"检索相关资料并作为上下文","source":"01_rag_jianjie.txt"},
+  {"question":"RAG 如何使用私有知识？","reference":"检索资料并作为上下文","source":"01_rag_jianjie.txt"},
+  {"question":"RAG 流程有哪些环节？","reference":"加载、切分、向量化、存储、检索、拼接提示词、生成","source":"01_rag_jianjie.txt"},
+  {"question":"Python 列表能修改吗？","reference":"可以修改","source":"02_python_jichu.txt"},
+  {"question":"哪种 Python 容器存键值对？","reference":"字典","source":"02_python_jichu.txt"},
+  {"question":"元组创建后可以改吗？","reference":"不可修改","source":"02_python_jichu.txt"},
+  {"question":"什么库可以读取 CSV 并做统计？","reference":"Pandas","source":"02_python_jichu.txt"},
+  {"question":"Hadoop 中谁负责存储？","reference":"HDFS","source":"03_hadoop_jianjie.txt"},
+  {"question":"MapReduce 负责什么？","reference":"分布式计算","source":"03_hadoop_jianjie.txt"},
+  {"question":"Hive 是什么？","reference":"建立在 Hadoop 上的数据仓库工具","source":"03_hadoop_jianjie.txt"},
+  {"question":"云帆科技总部位于哪里？","reference":"深圳","source":"04_gongsi_neibu.txt"},
+  {"question":"云帆科技是哪年成立的？","reference":"2016 年","source":"04_gongsi_neibu.txt"},
+  {"question":"云帆科技的技术团队有多少人？","reference":"约 120 人","source":"04_gongsi_neibu.txt"},
+  {"question":"云帆科技 2024 年营收是多少？","reference":"约 5000 万元","source":"04_gongsi_neibu.txt"},
+  {"question":"云帆科技的主要客户是什么行业？","reference":"金融和零售","source":"04_gongsi_neibu.txt"},
+  {"question":"云帆科技的首席执行官是谁？","reference":"资料没有说明","source":null},
+  {"question":"云帆科技 2026 年营收是多少？","reference":"资料没有说明","source":null},
+  {"question":"Python 是什么时候发明的？","reference":"资料没有说明","source":null},
+  {"question":"Hadoop 的默认副本数量是多少？","reference":"资料没有说明","source":null}
+]

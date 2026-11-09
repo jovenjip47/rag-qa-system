@@ -12,8 +12,6 @@ from dotenv import load_dotenv
 load_dotenv()
 os.environ.setdefault("HF_ENDPOINT", "https://hf-mirror.com")
 os.environ.setdefault("HF_HOME", os.path.join(os.path.dirname(os.path.abspath(__file__)), "models"))
-os.environ.setdefault("HF_HUB_OFFLINE", "1")
-os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
 os.environ.setdefault("ANONYMIZED_TELEMETRY", "False")
 os.environ.setdefault("HF_HUB_DISABLE_SYMLINKS_WARNING", "1")
 
@@ -111,7 +109,7 @@ def main():
     print("\n" + "=" * 50)
     print(f"直接问答 命中：{direct_ok}/{total}（{direct_ok / total * 100:.1f}%）")
     print(f"RAG 问答 命中：{rag_ok}/{total}（{rag_ok / total * 100:.1f}%）")
-    print(f"准确率提升：+{rag_ok - direct_ok} 题（{ (rag_ok - direct_ok) / total * 100:.1f} 个百分点）")
+    print(f"关键词命中差异：{rag_ok - direct_ok:+d} 题（{(rag_ok - direct_ok) / total * 100:+.1f} 个百分点）；命中不等于回答正确，请人工复核。")
 
     with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "实验报告.csv"), "w", encoding="utf-8-sig", newline="") as f:
         w = csv.writer(f)
@@ -122,4 +120,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 

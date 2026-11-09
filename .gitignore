@@ -11,3 +11,6 @@ __pycache__/
 .venv/
 venv/
 .idea/
+
+evaluation_results.csv
+.env

@@ -13,8 +13,6 @@ from dotenv import load_dotenv
 load_dotenv()
 os.environ.setdefault("HF_ENDPOINT", "https://hf-mirror.com")
 os.environ.setdefault("HF_HOME", os.path.join(os.path.dirname(os.path.abspath(__file__)), "models"))
-os.environ.setdefault("HF_HUB_OFFLINE", "1")
-os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
 os.environ.setdefault("ANONYMIZED_TELEMETRY", "False")
 os.environ.setdefault("HF_HUB_DISABLE_SYMLINKS_WARNING", "1")
 
@@ -69,7 +67,7 @@ def ask(question: str = Form(...)):
     )
     answer = resp.choices[0].message.content.strip()
     sources = [
-        {"index": i + 1, "content": d.page_content, "score": round(float(s), 3)}
+        {"index": i + 1, "content": d.page_content, "source": d.metadata.get("source", "未知"), "distance": round(float(s), 3)}
         for i, (d, s) in enumerate(results)
     ]
     return JSONResponse({"question": question, "answer": answer, "sources": sources})
@@ -81,7 +79,9 @@ async def upload(file: UploadFile = File(...)):
         return JSONResponse({"ok": False, "message": "目前只支持 .txt 文本文件"}, status_code=400)
     content = (await file.read()).decode("utf-8", errors="replace")
     chunks = splitter.split_text(content)
-    docs = [Document(page_content=c) for c in chunks]
+    docs = [Document(page_content=c, metadata={"source": file.filename}) for c in chunks]
+    if not docs:
+        return JSONResponse({"ok": False, "message": "文件没有可索引的内容"}, status_code=400)
     vectorstore.add_documents(docs)
     return JSONResponse({"ok": True, "message": f"上传成功，已把 {len(chunks)} 个文本块加入知识库，现在可以直接提问了"})
 
@@ -137,8 +137,15 @@ HTML_PAGE = """<!DOCTYPE html>
       const data = await res.json();
       document.getElementById("status").textContent = "";
       document.getElementById("answer").textContent = data.answer;
-      document.getElementById("sources").innerHTML = "<b>引用来源：</b>" + data.sources.map(s =>
-        `<div class="src">[${s.index}] ${s.content} <span class="score">(相关度 ${s.score})</span></div>`).join("");
+      const sources = document.getElementById("sources");
+      sources.replaceChildren();
+      sources.append(document.createTextNode("检索到的资料："));
+      for (const s of data.sources) {
+        const div = document.createElement("div");
+        div.className = "src";
+        div.textContent = `[${s.index}] ${s.source}（距离 ${s.distance}）\n${s.content}`;
+        sources.append(div);
+      }
       document.getElementById("answerCard").style.display = "block";
     }
     async function upload() {
@@ -161,4 +168,5 @@ if __name__ == "__main__":
     import uvicorn
     print("启动中，浏览器打开 http://127.0.0.1:8000 （首次启动需加载模型，约 20~30 秒）")
     uvicorn.run(app, host="127.0.0.1", port=8000)
+
 

@@ -16,9 +16,7 @@ os.environ.setdefault('HF_ENDPOINT', 'https://hf-mirror.com')  # 国内下载模
 
 os.environ.setdefault('HF_HOME', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models'))  # 模型缓存放到项目内
 
-os.environ.setdefault('HF_HUB_OFFLINE', '1')             # 模型已本地缓存，禁止联网
 
-os.environ.setdefault('TRANSFORMERS_OFFLINE', '1')
 
 os.environ.setdefault('ANONYMIZED_TELEMETRY', 'False')   # 关闭 Chroma 遥测
 
@@ -86,11 +84,12 @@ def main():
     print("=" * 50)
     print("【回答依据（检索到的资料）】")
     for i, (doc, score) in enumerate(results):
-        print(f"[{i+1}] 相关度 {score:.3f}：{doc.page_content[:60]}...")
+        print(f"[{i+1}] 来源 {doc.metadata.get('source', '未知')}，距离 {score:.3f}：{doc.page_content[:60]}...")
 
 
 if __name__ == "__main__":
     main()
+
 
 
 

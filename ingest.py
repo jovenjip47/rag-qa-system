@@ -16,9 +16,7 @@ os.environ.setdefault('HF_ENDPOINT', 'https://hf-mirror.com')  # 国内下载模
 
 os.environ.setdefault('HF_HOME', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models'))  # 模型缓存放到项目内
 
-os.environ.setdefault('HF_HUB_OFFLINE', '1')             # 模型已本地缓存，禁止联网
 
-os.environ.setdefault('TRANSFORMERS_OFFLINE', '1')
 
 os.environ.setdefault('ANONYMIZED_TELEMETRY', 'False')   # 关闭 Chroma 遥测
 
@@ -53,16 +51,17 @@ def main():
 
     # 3. 向量化并存入 Chroma
     embeddings = HuggingFaceEmbeddings(model_name=EMBED_MODEL)
-    Chroma.from_documents(
-        documents=chunks,
-        embedding=embeddings,
-        persist_directory=CHROMA_DIR,
-    )
+    vectorstore = Chroma(persist_directory=CHROMA_DIR, embedding_function=embeddings)
+    # 稳定 ID 使重复构建不会增加相同片段；先删除旧集合以清除已删除的文档。
+    vectorstore.delete_collection()
+    vectorstore = Chroma(persist_directory=CHROMA_DIR, embedding_function=embeddings)
+    vectorstore.add_documents(chunks)
     print(f"知识库构建完成，已保存到 {CHROMA_DIR}")
 
 
 if __name__ == "__main__":
     main()
+
 
 
 
