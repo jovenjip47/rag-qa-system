@@ -107,7 +107,7 @@ HTML_PAGE = """<!DOCTYPE html>
 <body>
   <h1>📚 RAG 知识库问答系统</h1>
   <div class="card">
-    <textarea id="q" placeholder="输入你的问题，例如：云帆科技成立于哪一年？"></textarea>
+    <textarea id="q" placeholder="例如：为什么不能把向量检索距离直接称为相关度？"></textarea>
     <br><br>
     <button onclick="ask()">提问</button>
     <span class="status" id="status"></span>

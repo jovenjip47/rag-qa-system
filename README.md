@@ -6,7 +6,7 @@
 
 - **知识库构建**：读取 txt 文档 → 文本切分 → 向量化 → 存入 Chroma
 - **命令行问答**：提问 → 检索 → 拼接 Prompt → DeepSeek 大模型生成回答
-- **对比实验**：直接问答 vs RAG 问答，自动打分并输出 CSV 报告
+- **对比实验**：直接问答 vs RAG 问答，输出结果供人工复核
 - **网页版**：FastAPI 封装接口，支持提问、查看引用来源、上传 txt 文档扩充知识库
 
 ## 技术栈
@@ -20,11 +20,12 @@ rag_project/
 ├── ingest.py        # 构建知识库（切分→向量化→存 Chroma）
 ├── query.py         # 命令行问答（检索→Prompt→生成）
 ├── compare.py       # 对比实验（直接问答 vs RAG 问答）
+├── evaluate.py      # 检索评测并导出人工复核表
 ├── app.py           # 网页版（FastAPI）
 ├── knowledge/       # 知识文档（txt）
 ├── requirements.txt # 依赖清单
 ├── .env.example     # 密钥配置模板
-└── 实验报告.csv      # 对比实验详细结果
+└── evaluation_cases.json # RAG 技术主题测试题
 ```
 
 ## 快速开始
@@ -58,7 +59,7 @@ rag_project/
 
 ## 评测与限制
 
-运行 `python evaluate.py` 检查 20 条示例题的前 4 个检索来源，结果写入 `evaluation_results.csv`。运行 `python evaluate.py --generate` 还会调用 DeepSeek 并产生 API 费用，把回答写入 CSV。请人工填写回答正确性和是否有资料依据；无答案题需人工检查是否合理拒答。文件名命中只是粗粒度指标，同一文件的错误片段也会计为命中，不能代替片段和回答检查。这些题基于示例语料编写，只适合练习，不代表真实场景性能。
+知识库内容聚焦 RAG 原理、文档处理、检索与生成、评估和工程实践，不包含虚构公司业务。运行 `python evaluate.py` 检查测试问题的前 4 个检索来源，结果写入 `evaluation_results.csv`。运行 `python evaluate.py --generate` 还会调用 DeepSeek 并产生 API 费用，把回答写入 CSV。请人工填写回答正确性和是否有资料依据；无答案题需人工检查是否合理拒答。文件名命中只是粗粒度指标，同一文件的错误片段也会计为命中，不能代替片段和回答检查。这些题基于项目知识文档编写，只适合练习，不代表真实场景性能。
 
 首次运行需要联网下载 BGE 模型；如果已有缓存且需要离线使用，可自行设置 `HF_HUB_OFFLINE=1` 和 `TRANSFORMERS_OFFLINE=1`。安装 PyTorch 时请依据自己的 CPU 或 CUDA 环境选择版本。重跑 `ingest.py` 会重建向量库，清除此前通过网页上传的内容；网页重复上传目前仍会产生重复片段。
 
